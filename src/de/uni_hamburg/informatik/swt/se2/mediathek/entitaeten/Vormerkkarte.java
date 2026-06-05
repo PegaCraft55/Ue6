@@ -33,12 +33,11 @@ public class Vormerkkarte
      * @ensure #getMedium() == medium
      * @ensure #getAusleihdatum() == ausleihdatum
      */
-    public Vormerkkarte(LinkedList<Kunde> vormerker, Medium medium)
+    public Vormerkkarte(Medium medium)
     {
-        assert vormerker != null : "Vorbedingung verletzt: vormerker != null";
         assert medium != null : "Vorbedingung verletzt: medium != null";
 
-        _vormerker = vormerker;
+        _vormerker = new LinkedList<>();
         _medium = medium;
     }
 
@@ -65,6 +64,18 @@ public class Vormerkkarte
     {
         return _medium;
     }
+    
+    public boolean istKunde(Kunde kunde)
+    {
+    	for (Kunde kunden : _vormerker)
+    	{
+    		if (kunde.equals(kunden))
+    		{
+    			return true;
+    		}
+    	}
+    	return false;
+    }
 
     public boolean kannVorgemerktWerden()
     {
@@ -90,6 +101,40 @@ public class Vormerkkarte
 
         _vormerker.add(kunde);
     }
+    
+
+    /**
+     * Entfernt einen Kunden aus der Vormerker-Liste.
+     * 
+     * @param kunde Der zu entfernende Kunde.
+     * 
+     * @require kunde != null
+     */
+    public void entferneKunden(Kunde kunde)
+    {
+        assert kunde != null : "Vorbedingung verletzt: kunde != null";
+        
+        _vormerker.remove(kunde);
+    }
+    
+    /**
+     * Gibt einen formatierten String mit den Informationen der Vormerkkarte zurück.
+     *
+     * @return Eine Textrepräsentation der Vormerkkarte.
+     *
+     * @ensure result != null
+     */
+    public String getFormatiertenString()
+    {
+        String result = "Vormerkkarte:\n";
+        result += "  Medium: " + _medium.getTitel() + "\n";
+        result += "  Vormerker:\n";
+        for (Kunde k : _vormerker)
+        {
+            result += "    - " + k.getVorname() + " " + k.getNachname() + "\n";
+        }
+        return result;
+    }
 
     @Override
     public int hashCode()
@@ -105,22 +150,12 @@ public class Vormerkkarte
     @Override
     public boolean equals(Object obj)
     {
-        boolean result = false;
-        if (obj instanceof Vormerkkarte)
-        {
-            Vormerkkarte other = (Vormerkkarte) obj;
-
-            if (other.getAusleihdatum()
-                .equals(_ausleihdatum)
-                    && other.getEntleiher()
-                        .equals(_entleiher)
-                    && other.getMedium()
-                        .equals(_medium))
-
-                result = true;
-        }
-        return result;
+        if (this == obj) return true;
+        if (!(obj instanceof Vormerkkarte)) return false;
+        Vormerkkarte other = (Vormerkkarte) obj;
+        return _medium.equals(other._medium);
     }
+    
 
     @Override
     public String toString()

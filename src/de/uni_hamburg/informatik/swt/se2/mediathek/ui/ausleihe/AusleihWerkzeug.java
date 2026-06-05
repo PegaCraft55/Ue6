@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 
 import de.uni_hamburg.informatik.swt.se2.mediathek.entitaeten.Kunde;
 import de.uni_hamburg.informatik.swt.se2.mediathek.entitaeten.medien.Medium;
+import de.uni_hamburg.informatik.swt.se2.mediathek.entitaeten.Vormerkkarte;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.ServiceObserver;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.kundenstamm.KundenstammService;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.medienbestand.MedienbestandService;
@@ -214,11 +215,35 @@ public class AusleihWerkzeug
         Kunde kunde = _kundenAuflisterWerkzeug.getSelectedKunde();
         // TODO für Aufgabenblatt 6 (nicht löschen): So ändern, dass vorgemerkte
         // Medien nur vom ersten Vormerker ausgeliehen werden können, gemäß
-        // Anforderung c).
+        // Anforderung c)
         boolean ausleiheMoeglich = (kunde != null) && !medien.isEmpty()
-                && _verleihService.sindAlleNichtVerliehen(medien);
+                && _verleihService.sindAlleNichtVerliehen(medien) && istErsterKunde(medien, kunde);
+        
 
         return ausleiheMoeglich;
+    }
+    
+    /**
+     * Hilfsmethode für istAusleihenMoeglich
+     * @param medien
+     * @param kunde
+     * @return
+     */
+    private boolean istErsterKunde(List<Medium> medien, Kunde kunde)
+    {
+    	for (Medium medium : medien)
+        {
+            if (_verleihService.istVorgemerkt(medium))
+            {
+                Vormerkkarte karte = _verleihService.getVormerkkarteFuer(medium);
+                Kunde ersterVormerker = karte.getVormerker().getFirst();
+                if (!ersterVormerker.equals(kunde))
+                {
+                    return false;
+                }
+            }
+        }
+    	return true;
     }
 
     /**

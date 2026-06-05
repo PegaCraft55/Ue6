@@ -7,6 +7,7 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import de.uni_hamburg.informatik.swt.se2.mediathek.entitaeten.Kunde;
+import de.uni_hamburg.informatik.swt.se2.mediathek.entitaeten.Vormerkkarte;
 import de.uni_hamburg.informatik.swt.se2.mediathek.entitaeten.medien.Medium;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.ServiceObserver;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.kundenstamm.KundenstammService;
@@ -212,9 +213,25 @@ public class VormerkWerkzeug
         // TODO für Aufgabenblatt 6 (nicht löschen): Prüfung muss noch eingebaut
         // werden. Ist dies korrekt implementiert, wird der Vormerk-Button gemäß
         // der Anforderungen a), b), c) und e) aktiviert.
-        boolean vormerkenMoeglich = (kunde != null) && !medien.isEmpty();
-
+        boolean vormerkenMoeglich = (kunde != null) && !medien.isEmpty() && dreiPlaetze(medien, kunde);
+        
         return vormerkenMoeglich;
+    }
+    
+    private boolean dreiPlaetze(List<Medium> medien, Kunde kunde)
+    {
+    	for (Medium medium : medien)
+        {
+            if (_verleihService.istVorgemerkt(medium))
+            {
+                Vormerkkarte karte = _verleihService.getVormerkkarteFuer(medium);
+                if (!karte.kannVorgemerktWerden() || !karte.istKunde(kunde))
+                {
+                    return false;
+                }
+            }
+        }
+    	return true;
     }
 
     /**
@@ -229,6 +246,10 @@ public class VormerkWerkzeug
             .getSelectedMedien();
         Kunde selectedKunde = _kundenAuflisterWerkzeug.getSelectedKunde();
         // TODO für Aufgabenblatt 6 (nicht löschen): Vormerken einbauen
+        for (Medium medium : selectedMedien)
+        {
+            _verleihService.merkeVor(selectedKunde, medium);
+        }
 
     }
 

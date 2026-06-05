@@ -2,6 +2,7 @@ package de.uni_hamburg.informatik.swt.se2.mediathek.ui.subwerkzeuge.vormerkmedie
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.LinkedList;
 
 import javax.swing.JPanel;
 import javax.swing.event.ListSelectionEvent;
@@ -9,6 +10,7 @@ import javax.swing.event.ListSelectionListener;
 
 import de.uni_hamburg.informatik.swt.se2.mediathek.entitaeten.Kunde;
 import de.uni_hamburg.informatik.swt.se2.mediathek.entitaeten.medien.Medium;
+import de.uni_hamburg.informatik.swt.se2.mediathek.entitaeten.Vormerkkarte;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.ServiceObserver;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.medienbestand.MedienbestandService;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.verleih.VerleihService;
@@ -88,6 +90,15 @@ public class VormerkMedienauflisterWerkzeug extends ObservableSubWerkzeug
             Kunde vormerker1 = null;
             Kunde vormerker2 = null;
             Kunde vormerker3 = null;
+            
+            if (_verleihService.istVorgemerkt(medium))
+            {
+                Vormerkkarte karte = _verleihService.getVormerkkarteFuer(medium);
+                LinkedList<Kunde> vormerker = karte.getVormerker();
+                if (vormerker.size() >= 1) vormerker1 = vormerker.get(0);
+                if (vormerker.size() >= 2) vormerker2 = vormerker.get(1);
+                if (vormerker.size() >= 3) vormerker3 = vormerker.get(2);
+            }
 
             medienFormatierer.add(new VormerkMedienFormatierer(medium,
                     entleiher, vormerker1, vormerker2, vormerker3));

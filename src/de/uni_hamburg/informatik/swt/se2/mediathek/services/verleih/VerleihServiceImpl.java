@@ -7,6 +7,7 @@ import java.util.Map;
 
 import de.uni_hamburg.informatik.swt.se2.mediathek.entitaeten.Kunde;
 import de.uni_hamburg.informatik.swt.se2.mediathek.entitaeten.Verleihkarte;
+import de.uni_hamburg.informatik.swt.se2.mediathek.entitaeten.Vormerkkarte;
 import de.uni_hamburg.informatik.swt.se2.mediathek.entitaeten.medien.Medium;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.AbstractObservableService;
 import de.uni_hamburg.informatik.swt.se2.mediathek.services.kundenstamm.KundenstammService;
@@ -29,6 +30,12 @@ public class VerleihServiceImpl extends AbstractObservableService
      * die Angabe des Mediums möglich. Beispiel: _verleihkarten.get(medium)
      */
     private Map<Medium, Verleihkarte> _verleihkarten;
+    
+    /**
+     * Diese Map speichert für jedes vorgemerkte Medium die dazugehörige
+     * Vormerkkarte.
+     */
+    private Map<Medium, Vormerkkarte> _vormerkkarten;
 
     /**
      * Der Medienbestand.
@@ -64,6 +71,7 @@ public class VerleihServiceImpl extends AbstractObservableService
         assert medienbestand != null : "Vorbedingung verletzt: medienbestand  != null";
         assert initialBestand != null : "Vorbedingung verletzt: initialBestand  != null";
         _verleihkarten = erzeugeVerleihkartenBestand(initialBestand);
+        _vormerkkarten = new HashMap<>();
         _kundenstamm = kundenstamm;
         _medienbestand = medienbestand;
         _protokollierer = new VerleihProtokollierer();
@@ -295,6 +303,83 @@ public class VerleihServiceImpl extends AbstractObservableService
             }
         }
         return result;
+    }
+    
+    @Override
+    public void merkeVor(Kunde kunde, Medium medium)
+    {
+        assert kundeImBestand(
+                kunde) : "Vorbedingung verletzt: kundeImBestand(kunde)";
+        assert mediumImBestand(
+                medium) : "Vorbedingung verletzt: mediumImBestand(medium)";
+        assert istVormerkenMoeglich(
+                kunde, medium) : "Vorbedingung verletzt: istVormerkenMoeglich(kunde, medium)";
+ 
+        Vormerkkarte karte = _vormerkkarten.get(medium);
+        if (karte == null)
+        {
+            karte = new Vormerkkarte(medium);
+            _vormerkkarten.put(medium, karte);
+        }
+        karte.fuegeKundenHinzu(kunde);
+        informiereUeberAenderung();
+    }
+ 
+    @Override
+    public boolean istVormerkenMoeglich(Kunde kunde, Medium medium)
+    {
+        assert kundeImBestand(
+                kunde) : "Vorbedingung verletzt: kundeImBestand(kunde)";
+        assert mediumImBestand(
+                medium) : "Vorbedingung verletzt: mediumImBestand(medium)";
+ 
+        Vormerkkarte karte = _vormerkkarten.get(medium);
+ 
+        // Medium ist nicht verliehen und hat keine Vormerker -> kein Vormerken sinnvoll
+        if (!istVerliehen(medium)
+                && (karte == null || karte.getVormerker().isEmpty()))
+        {
+            return false;
+        }
+        // Maximale Anzahl an Vormerkern bereits erreicht
+        if (karte != null && !karte.kannVorgemerktWerden())
+        {
+            return false;
+        }
+        // Kunde ist bereits Vormerker
+        if (karte != null && karte.getVormerker().contains(kunde))
+        {
+            return false;
+        }
+        // Kunde ist der aktuelle Entleiher
+        if (istVerliehen(medium) && istVerliehenAn(kunde, medium))
+        {
+            return false;
+        }
+        return true;
+    }
+ 
+    @Override
+    public boolean istVorgemerkt(Medium medium)
+    {
+        assert mediumImBestand(
+                medium) : "Vorbedingung verletzt: mediumImBestand(medium)";
+        Vormerkkarte karte = _vormerkkarten.get(medium);
+        return karte != null && !karte.getVormerker().isEmpty();
+    }
+ 
+    @Override
+    public Vormerkkarte getVormerkkarteFuer(Medium medium)
+    {
+        assert mediumImBestand(
+                medium) : "Vorbedingung verletzt: mediumImBestand(medium)";
+        return _vormerkkarten.get(medium);
+    }
+ 
+    @Override
+    public List<Vormerkkarte> getVormerkkarten()
+    {
+        return new ArrayList<>(_vormerkkarten.values());
     }
 
 }
