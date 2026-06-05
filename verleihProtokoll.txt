@@ -1,0 +1,39 @@
+Fri Jun 05 15:31:18 CEST 2026: Ausleihe
+CD:
+    Titel: Wincing the Night Away
+    Kommentar: Die fleißigsten Slacker der Indie-Szene 
+    Interpret: the Shins
+    Spiellänge: 69
+am 5.6.2026 verliehen an
+    Kundennummer: 123462
+    Name: John Rambo
+    Telefon: unbekannt
+    Anschrift:
+    Fightstreet 99
+    60311 Frankfurt
+Fri Jun 05 15:37:13 CEST 2026: Ausleihe
+CD:
+    Titel: Disturbia
+    Kommentar: gut
+    Interpret: Rihanna
+    Spiellänge: 90
+am 5.6.2026 verliehen an
+    Kundennummer: 123461
+    Name: Anna Kurnikowa
+    Telefon: unbekannt
+    Anschrift:
+    Osterweg 1
+    22670 Hamburg
+Fri Jun 05 15:37:24 CEST 2026: Rückgabe
+CD:
+    Titel: Disturbia
+    Kommentar: gut
+    Interpret: Rihanna
+    Spiellänge: 90
+am 5.6.2026 verliehen an
+    Kundennummer: 123461
+    Name: Anna Kurnikowa
+    Telefon: unbekannt
+    Anschrift:
+    Osterweg 1
+    22670 Hamburg

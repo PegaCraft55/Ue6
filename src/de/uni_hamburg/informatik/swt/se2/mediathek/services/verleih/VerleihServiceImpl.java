@@ -214,14 +214,21 @@ public class VerleihServiceImpl extends AbstractObservableService
         {
             Verleihkarte verleihkarte = new Verleihkarte(kunde, medium,
                     ausleihDatum);
+            Vormerkkarte karte = _vormerkkarten.get(medium);
 
             _verleihkarten.put(medium, verleihkarte);
             _protokollierer.protokolliere(
                     VerleihProtokollierer.EREIGNIS_AUSLEIHE, verleihkarte);
+
+            if (karte != null)
+            {
+                karte.entferneKunden(kunde);
+            }
         }
         // Was passiert wenn das Protokollieren mitten in der Schleife
         // schief geht? informiereUeberAenderung in einen finally Block?
         informiereUeberAenderung();
+        
     }
 
     @Override

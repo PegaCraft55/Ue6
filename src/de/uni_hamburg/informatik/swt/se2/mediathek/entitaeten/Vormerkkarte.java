@@ -67,13 +67,7 @@ public class Vormerkkarte
     
     public boolean istKunde(Kunde kunde)
     {
-    	for (Kunde kunden : _vormerker)
-    	{
-    		if (kunde.equals(kunden))
-    		{
-    			return true;
-    		}
-    	}
+    	_vormerker.contains(kunde);
     	return false;
     }
 
