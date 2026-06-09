@@ -67,8 +67,14 @@ public class Vormerkkarte
     
     public boolean istKunde(Kunde kunde)
     {
-    	_vormerker.contains(kunde);
-    	return false;
+    	if (_vormerker.contains(kunde))
+    	{
+    		return false;
+    	}
+    	else
+    	{
+    		return true;
+    	}
     }
 
     public boolean kannVorgemerktWerden()
