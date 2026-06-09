@@ -89,3 +89,16 @@ am 9.6.2026 verliehen an
     Anschrift:
     Müllerweg 1
     22760 Hamburg
+Tue Jun 09 11:03:38 CEST 2026: Ausleihe
+CD:
+    Titel: Breakaway
+    Kommentar: Nachfolger vom Album Tankful
+    Interpret: Kelly Clarkson
+    Spiellänge: 87
+am 9.6.2026 verliehen an
+    Kundennummer: 123460
+    Name: Katarina Klum
+    Telefon: unbekannt
+    Anschrift:
+    Ottensener Strasse 10
+    22761 Hamburg
